@@ -177,9 +177,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Profile information for a user",
+                        "description": "List of countries that having products",
                         "schema": {
-                            "$ref": "#/definitions/Country"
+                            "type": "array",
+                            "title": "data",
+                            "items": {
+                                "$ref": "#/definitions/Country"
+                            }
                         }
                     },
                     "default": {
@@ -195,14 +199,6 @@
             "get": {
                 "summary": "Categories",
                 "description": "Endpoint to get all the categories",
-                "parameters": [
-                    {
-                        "name": "lang",
-                        "in": "query",
-                        "type": "string",
-                        "description": "Language optional two letters parameter. Example \"ru\", \"en\"."
-                    }
-                ],
                 "tags": [
                     "Category"
                 ],
@@ -210,7 +206,11 @@
                     "200": {
                         "description": "History information for the given user",
                         "schema": {
-                            "$ref": "#/definitions/Activities"
+                            "type": "array",
+                            "title": "data",
+                            "items": {
+                                "$ref": "#/definitions/Category"
+                            }
                         }
                     },
                     "default": {
@@ -226,12 +226,16 @@
             "get": {
                 "summary": "Refresh Token",
                 "description": "Endpoint to refresh current token.",
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "Authorization",
                         "in": "header",
                         "type": "string",
-                        "description": "Authorization token. \"Bearer: xxxxxx...\""
+                        "description": "Authorization token. \"Bearer: xxxxxx...\"",
+                        "required": true
                     }
                 ],
                 "tags": [
@@ -244,14 +248,27 @@
                             "$ref": "#/definitions/Activities"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "403": {
+                        "description": "Not authorized",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ]
             }
+        }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "description": "",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     },
     "definitions": {
@@ -283,13 +300,17 @@
         "Attractiction": {
             "type": "object",
             "properties": {
-                "product_id": {
-                    "type": "string",
-                    "description": "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles"
+                "ID": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID of the product"
+                },
+                "country": {
+                    "$ref": "#/definitions/Country"
                 },
                 "currency_code": {
                     "type": "string",
-                    "description": "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
+                    "description": "..."
                 },
                 "display_name": {
                     "type": "string",
@@ -297,7 +318,7 @@
                 },
                 "estimate": {
                     "type": "string",
-                    "description": "Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or \"Metered\" for TAXI."
+                    "description": "..."
                 },
                 "low_estimate": {
                     "type": "number",
@@ -309,7 +330,7 @@
                 },
                 "surge_multiplier": {
                     "type": "number",
-                    "description": "Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier."
+                    "description": "..."
                 }
             }
         },
@@ -338,12 +359,35 @@
                 }
             }
         },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Country name."
+                },
+                "i18nNames": {
+                    "type": "object",
+                    "description": "Object of translated names."
+                }
+            }
+        },
         "Country": {
             "type": "object",
             "properties": {
-                "uuid": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "ID."
+                },
+                "name": {
                     "type": "string",
-                    "description": "Unique identifier for the activity"
+                    "description": "Country name."
                 }
             }
         },
