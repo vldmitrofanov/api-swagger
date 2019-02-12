@@ -7,7 +7,8 @@
     },
     "host": "demo-api.attractionsbox.com",
     "schemes": [
-        "https"
+        "https",
+        "http"
     ],
     "basePath": "/v1",
     "consumes": [
@@ -120,14 +121,14 @@
                     {
                         "name": "username",
                         "in": "query",
-                        "description": "Latitude component of start location.",
+                        "description": "Username. Email usually..",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "password",
                         "in": "query",
-                        "description": "Longitude component of start location.",
+                        "description": "Password.",
                         "required": true,
                         "type": "string"
                     }
@@ -217,7 +218,7 @@
                         "name": "Authorization",
                         "in": "header",
                         "type": "string",
-                        "description": "Authorization token"
+                        "description": "Authorization token. \"Bearer: xxxxxx...\""
                     }
                 ],
                 "tags": [
