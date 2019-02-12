@@ -7,7 +7,6 @@
     },
     "host": "demo-api.attractionsbox.com",
     "schemes": [
-        "https",
         "http"
     ],
     "basePath": "/v1",
