@@ -147,7 +147,7 @@
                     }
                 ],
                 "tags": [
-                    "Estimates"
+                    "User"
                 ],
                 "responses": {
                     "200": {
@@ -155,14 +155,17 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/User"
+                                "$ref": "#/definitions/NewToken"
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "401": {
+                        "description": "Login failed",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Error"
+                            }
                         }
                     }
                 }
@@ -222,50 +225,40 @@
                 }
             }
         },
-        "/refresh_token": {
+        "/auth/refresh_token": {
             "get": {
                 "summary": "Refresh Token",
                 "description": "Endpoint to refresh current token.",
                 "produces": [
                     "application/json"
                 ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "type": "string",
-                        "description": "Authorization token. \"Bearer: xxxxxx...\"",
-                        "required": true
-                    }
-                ],
                 "tags": [
                     "User"
                 ],
                 "responses": {
                     "200": {
-                        "description": "History information for the given user",
+                        "description": "New token",
                         "schema": {
-                            "$ref": "#/definitions/Activities"
+                            "$ref": "#/definitions/NewToken"
                         }
                     },
-                    "403": {
+                    "401": {
                         "description": "Not authorized",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/CookieError"
                         }
                     }
                 },
                 "security": [
                     {
-                        "JWT": []
+                        "Bearer": []
                     }
                 ]
             }
         }
     },
     "securityDefinitions": {
-        "JWT": {
-            "description": "",
+        "Bearer": {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
@@ -417,6 +410,21 @@
                 }
             }
         },
+        "NewToken": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "expire": {
+                    "type": "string"
+                }
+            }
+        },
         "Error": {
             "type": "object",
             "properties": {
@@ -428,6 +436,18 @@
                     "type": "string"
                 },
                 "fields": {
+                    "type": "string"
+                }
+            }
+        },
+        "CookieError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
                     "type": "string"
                 }
             }
